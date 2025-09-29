@@ -1,0 +1,55 @@
+/* src/styles/Layout.css */
+
+.app-layout-container {
+  display: flex;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  width: 100vw;  /* Ocupa todo el ancho de la ventana */
+  background-color: #f0f2f5; /* Color de fondo general de la app (opcional) */
+  overflow: hidden; /* Evita scrollbars en el contenedor principal */
+}
+
+.layout-sidebar-wrapper {
+  /* Los estilos de ancho, color, etc., vendrán de Sidebar.css */
+  flex-shrink: 0; /* Evita que el sidebar se encoja */
+  /* Si Sidebar.css no maneja la altura, podrías añadir: height: 100vh; overflow-y: auto; */
+}
+
+.layout-main-content-wrapper {
+  flex-grow: 1; /* Ocupa el espacio restante */
+  display: flex;
+  flex-direction: column; /* Para que Header esté arriba y main abajo */
+  overflow: hidden; /* MUY IMPORTANTE: Evita que este contenedor cause doble scrollbar */
+                   /* El scroll debe estar DENTRO del 'layout-page-outlet' */
+}
+
+.layout-header-wrapper {
+  /* Los estilos de altura, color, etc., vendrán de Header.css */
+  flex-shrink: 0; /* Evita que el header se encoja */
+  /* z-index: 10; */ /* Opcional: para asegurar que esté encima del contenido si hay overlays */
+}
+
+.layout-page-outlet { /* Este es el <main> donde se renderiza tu contenido */
+  flex-grow: 1; /* Ocupa todo el espacio vertical restante después del Header */
+  padding: 20px; /* O el padding que desees para el contenido de tus páginas */
+  overflow-y: auto; /* <<<====== HABILITA EL SCROLL VERTICAL ======>>> */
+                    /* Aparecerá solo si el contenido es más alto que el área visible */
+  overflow-x: hidden; /* Evita scroll horizontal no deseado en el área de contenido */
+  background-color: #e9eef2; /* Color de fondo para el área de contenido, ajústalo */
+  box-sizing: border-box;
+}
+
+/* Asegúrate de que el body y html no tengan overflow que interfiera,
+   aunque el overflow:hidden en app-layout-container debería ayudar.
+   En tu index.css o App.css global, podrías tener:
+*/
+/*
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // Para el html y body si quieres evitar scroll en toda la página
+}
+#root > .app-layout-container { // Si app-layout-container es hijo directo de #root
+  height: 100%;
+}
+*/

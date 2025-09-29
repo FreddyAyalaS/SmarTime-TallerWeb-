@@ -1,0 +1,72 @@
+.app-sidebar-container {
+  width: 260px;
+  height: 100vh;
+  background-color: #A690A4;
+  padding: 25px 0;
+  display: flex;
+  flex-direction: column;
+  color: #4A2E5E;
+  font-family: 'Arial', sans-serif;
+  box-sizing: border-box;
+}
+
+.app-sidebar-logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.app-sidebar-logo-text {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4A2E5E;
+}
+
+.app-sidebar-nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  text-decoration: none;
+  color: #4A2E5E;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.app-sidebar-nav-item:hover {
+  background-color: #AEA0CF;
+  color: #FFFFFF;
+}
+
+.app-sidebar-nav-item-active {
+  background-color: #4A2E5E;
+  color: #FFFFFF !important;
+  font-weight: bold;
+  border-left: 4px solid #FFFFFF;
+  padding-left: calc(30px - 4px);
+}
+
+.app-sidebar-nav-item-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+}
+
+.app-sidebar-nav-item-text {
+  font-size: 0.95rem;
+}
+
+.app-sidebar-footer {
+  margin-top: auto;
+}
+
+.app-sidebar-logo-image {
+}

@@ -1,0 +1,52 @@
+/* src/components/Notifications/NotificationPanel.css */
+.notification-panel {
+  position: absolute;
+  top: 60px; /* Debajo del header, ajusta según la altura de tu header */
+  right: 10px; /* Ajusta para alinearlo con el ícono de la campana */
+  width: 350px; /* Ancho del panel */
+  max-height: 400px; /* Altura máxima, con scroll si hay muchas notificaciones */
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100; /* Para que esté encima de otro contenido */
+  border: 1px solid #e5e7eb;
+}
+
+.notification-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.notification-panel-title {
+  font-size: 1rem; /* 16px */
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.notification-panel-clear-all {
+  font-size: 0.8rem; /* 13px */
+  color: #3b82f6; /* Color azul para el enlace */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.notification-panel-clear-all:hover {
+  text-decoration: underline;
+}
+
+.notification-panel-list {
+  /* Ya tiene overflow-y: auto el panel principal si es necesario */
+}
+
+.notification-panel-empty {
+  padding: 20px 15px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}

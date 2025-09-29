@@ -1,0 +1,176 @@
+.login-page-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  align-items: stretch;
+  background-color: #A690A4;
+}
+
+.login-form-section {
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: #A690A4;
+  box-sizing: border-box;
+  
+}
+
+.login-form-card {
+  background-color: #F3F4F6;
+  padding: 30px 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  height: auto;
+  max-width: 400px;
+  text-align: center;
+  margin-top: 60px;
+  margin-left: 120px;
+  margin-right: 100px;
+}
+
+.login-app-name {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #5B21B6;
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-app-name img {
+  height: 50px;
+  margin-right: 10px;
+}
+
+.login-page-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 20px;
+}
+
+.login-google-button {
+  margin-bottom: 25px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.login-google-button::before {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.login-divider-container {
+  display: flex;
+  align-items: center;
+  margin: 25px 0;
+  color: #6B7280;
+}
+
+.login-divider-line {
+  flex-grow: 1;
+  border: none;
+  border-top: 1px solid #D1D5DB;
+}
+
+.login-divider-text {
+  padding: 0 15px;
+  font-size: 0.875rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-forgot-password {
+  text-align: right;
+  margin-bottom: 18px;
+  font-size: 0.875rem;
+}
+
+.login-link {
+  color: #6D28D9;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.login-submit-button {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.login-signup-prompt {
+  margin-top: 25px;
+  font-size: 0.875rem;
+  color: #4B5568;
+}
+
+.login-image-section {
+  flex-basis: 70%;
+  background-image: url('../assets/Icons/auth-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 768px) {
+  .login-page-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-form-section {
+    flex-basis: auto;
+    width: 100%;
+    padding: 20px;
+    order: 1;
+  }
+
+  .login-form-card {
+    margin-top: 20px;
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .login-image-section {
+    display: none;
+  }
+
+  .login-app-name {
+    font-size: 2rem;
+  }
+
+  .login-page-title {
+    font-size: 1.5rem;
+  }
+}
+
+.login-logo-container {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  gap: 20px;
+}
+
+.login-form-error-message {
+  background-color: #fee2e2; /* Fondo rojo muy claro */
+  color: #b91c1c;       /* Texto rojo oscuro */
+  border: 1px solid #fca5a5; /* Borde rojo claro */
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin-bottom: 0px; /* Ajusta según necesites para el espaciado */
+  text-align: left;
+}

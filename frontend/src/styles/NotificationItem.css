@@ -1,0 +1,54 @@
+/* src/components/Notifications/NotificationItem.css */
+.notification-item {
+  display: flex;
+  align-items: flex-start; /* Alinea ícono y texto arriba si el texto es largo */
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb; /* Separador entre notificaciones */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-decoration: none; /* Si es un Link */
+  color: inherit; /* Si es un Link */
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: #f9fafb; /* Fondo claro en hover */
+}
+
+.notification-item.is-unread {
+  background-color: #eff6ff; /* Un azul muy claro para no leídas (opcional) */
+  /* font-weight: 500; /* Opcional: texto un poco más bold para no leídas */
+}
+
+.notification-item-icon-container {
+  margin-right: 12px;
+  font-size: 1.1rem; /* Tamaño para los emojis placeholder */
+  color: #4b5563; /* Color del ícono */
+  flex-shrink: 0;
+  padding-top: 2px; /* Pequeño ajuste vertical */
+}
+
+.notification-item-content {
+  flex-grow: 1;
+}
+
+.notification-item-message {
+  font-size: 0.875rem; /* 14px */
+  color: #374151; /* Texto principal */
+  line-height: 1.4;
+  margin: 0;
+}
+
+.notification-item.is-unread .notification-item-message {
+  /* font-weight: 500; */ /* Puedes hacer el texto de no leídas un poco más bold */
+}
+
+.notification-item-timestamp {
+  font-size: 0.75rem; /* 12px */
+  color: #6b7280; /* Texto de timestamp más claro */
+  margin-top: 4px;
+  display: block;
+}

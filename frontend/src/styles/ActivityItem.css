@@ -1,0 +1,33 @@
+
+.activity-item {
+  display: flex;
+  align-items:center; /* Centra verticalmente el tiempo y el título */
+  border-radius: 12px; /* Bordes redondeados como en la imagen */
+  margin-bottom: 15px; /* Espacio entre items */
+  color: #2D3748; /* Color de texto oscuro, ajusta si es necesario */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra sutil */
+  font-weight: 500;
+}
+
+.activity-item:last-child {
+  margin-bottom: 0; /* Sin margen para el último item */
+}
+
+.activity-item-time {
+  display: flex;
+  flex-direction: column; /* Hora de inicio encima de hora de fin */
+  align-items: center;   /* Centra las horas */
+  justify-content: center;
+  margin-right: 25px; /* Espacio entre el bloque de tiempo y el título */
+  font-size: 0.9em;
+  min-width: 50px; /* Ancho mínimo para el bloque de tiempo */
+}
+
+.activity-item-time span {
+  line-height: 1.5;
+}
+
+.activity-item-title {
+  flex-grow: 1; /* El título ocupa el espacio restante */
+  font-size: 0.95em;
+}

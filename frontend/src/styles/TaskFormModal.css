@@ -1,0 +1,93 @@
+/* src/components/TaskFormModal/TaskFormModal.css */
+.task-form-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex;
+  align-items: flex-start; /* Alinea arriba */
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto; /* Scroll sobre la página */
+  padding: 40px 20px; /* Espacio alrededor del modal */
+}
+
+.task-form-modal-content {
+  background-color: white;
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-form-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.task-form-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.task-form-modal-close-button {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0 5px;
+  line-height: 1;
+}
+.task-form-modal-close-button:hover {
+  color: #1f2937;
+}
+
+.task-form-modal-body {
+  flex-grow: 1;
+}
+
+.task-form-actual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Estilos para el select */
+.task-form-actual-form .input-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.task-form-actual-form .input-field {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.task-form-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  margin-top: 25px;
+}
+
+/* Puedes dejar vacíos estos si ya usas variant="secondary"/"primary" */
+.task-form-cancel-button {}
+.task-form-submit-button {}

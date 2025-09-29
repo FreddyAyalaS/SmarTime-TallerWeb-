@@ -1,0 +1,42 @@
+.status-button.status-inicio {
+  background-color: #EF4444 !important;  /* rojo */
+  color: #fff !important;
+  font-weight: 600;
+  border: none;
+}
+.status-button.status-en-desarrollo {
+  background-color: #F59E0B !important;  /* naranja */
+  color: #fff !important;
+  font-weight: 600;
+  border: none;
+}
+.status-button.status-finalizado {
+  background-color: #10B981 !important;  /* verde */
+  color: #fff !important;
+  font-weight: 600;
+  border: none;
+}
+.status-button-entregado {
+  padding: 6px 15px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-left: 6px;
+  margin-right: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.status-button-entregado.no-entregado {
+  background: #e5e7eb;
+  color: #374151;
+}
+.status-button-entregado.entregado {
+  background: #22c55e;
+  color: #fff;
+}
+.status-button.activo {
+  border: 2px solid #333;
+  font-weight: bold;
+  background-color: #e0e0e0;
+}

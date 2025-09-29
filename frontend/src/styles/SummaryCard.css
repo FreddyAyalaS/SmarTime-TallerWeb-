@@ -1,0 +1,91 @@
+/* src/components/SummaryCard/SummaryCard.css */
+
+.summary-card {
+  background-color: #FFFFFF;
+  border: 2px solid #4A90E2;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+
+  /* 🔄 CAMBIOS PARA ANCHO AJUSTABLE */
+  width: 100%;
+  max-width: 480px;
+  min-width: 280px;
+
+  /* 🔄 CENTRAR EN CUADRANTE */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.summary-card-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 0;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.summary-card-content {
+  width: 100%;
+  /* Evitamos fijar height */
+}
+
+/* === ESTILOS DE LAS TAREAS === */
+
+.dashboard-task-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin: 5px 0;
+  color: black;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: #4A90E2;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-no-tasks {
+  color: #555;
+  padding: 10px;
+  font-style: italic;
+}
+
+.task-status-icon {
+  width: 28px;
+  height: 28px;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.task-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.task-deadline-text {
+  font-size: 0.85rem;
+  color: #f4f4f4;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+/* === GRID DEL DASHBOARD === */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.dashboard-grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}

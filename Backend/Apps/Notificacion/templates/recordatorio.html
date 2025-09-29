@@ -1,0 +1,10 @@
+<h2>Hola {{ nombre }},</h2>
+<p>Estas son tus actividades para hoy:</p>
+<ul>
+  {% for actividad in actividades %}
+  <li>
+    {% if actividad.titulo %} {{ actividad.titulo }} {% else %}
+    {{actividad.curso }} {% endif %} - {{ actividad.horaInicio|date:"g:i A" }}
+  </li>
+  {% endfor %}
+</ul>

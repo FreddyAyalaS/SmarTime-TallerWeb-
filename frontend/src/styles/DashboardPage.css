@@ -1,0 +1,94 @@
+/* src/pages/DashboardPage/DashboardPage.css */
+.dashboard-page {
+  padding: 20px; /* Padding general para la página del dashboard */
+  width: 100%;
+  justify-content: center; 
+}
+
+.dashboard-welcome-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+.dashboard-summary-section {
+  /* Puedes usar esto para limitar el ancho de las tarjetas de resumen si es necesario,
+     o para ponerlas en un layout de columnas si tienes varias. */
+   width: 200px; 
+}
+
+.dashboard-task-box2 {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  border-left: 6px solid #ccc; /* dinámico desde el inline style */
+}
+
+.task-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.task-deadline-text {
+  font-size: 0.9rem;
+  color: #000000;
+}
+
+/* Colores por tipo de actividad */
+.dashboard-task-box2.tarea {
+  background-color: #4A90E2;
+  color: white;
+}
+
+.dashboard-task-box2.estudio {
+  background-color: #2ECC71;
+  color: white;
+}
+
+.dashboard-task-box2.clase {
+  background-color: #F39C12;
+  color: white;
+}
+
+.dashboard-task-box2.act_no_academica {
+  background-color: #95A5A6;
+  color: white;
+}
+
+/* Vista Semanal */
+.weekly-view {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.weekly-day {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  border-radius: 6px;
+  background: #f2f2f2;
+  margin: 0 2px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.weekly-day.has-task {
+  background: #4A90E2; /* Azul: tarea */
+  color: white;
+}
+
+.weekly-day.has-activity {
+  background: #2ECC71; /* Verde: actividad */
+  color: white;
+}
+
+.weekly-day.has-task.has-activity {
+  background: #9B59B6; /* Mezcla: morado si hay ambos */
+  color: white;
+}

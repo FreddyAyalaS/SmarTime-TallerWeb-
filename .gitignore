@@ -1,0 +1,41 @@
+# Entorno virtual de Python
+venv/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de base de datos SQLite (si se usa en local)
+*.sqlite3
+
+# Archivos de entorno
+.env
+
+# Logs
+*.log
+
+# Archivos de migración de Django innecesarios (opcional)
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+# Archivos estáticos y de medios generados
+/staticfiles/
+/media/
+
+# Node.js (React frontend)
+node_modules/
+dist/
+.build/
+
+# Archivos de configuración de sistemas operativos
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/
+
+# Otros posibles entornos
+*.egg-info/
+*.egg
+*.bak

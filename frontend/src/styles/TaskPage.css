@@ -1,0 +1,109 @@
+/* src/styles/TasksPage.css */
+.tasks-page-container {
+  padding: 20px;
+}
+
+.tasks-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.tasks-page-title {
+  font-size: 1.8rem; /* Similar al título del Header */
+  font-weight: bold;
+  color: #111827;
+}
+
+.tasks-add-button {
+  /* Tu componente Button con variant="primary" debería darle el estilo base */
+}
+
+.tasks-table-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-x: auto; /* Para tablas anchas en pantallas pequeñas */
+}
+
+.tasks-table {
+  width: 100%;
+  border-collapse: collapse; /* Une los bordes de las celdas */
+}
+
+.tasks-table th,
+.tasks-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb; /* Línea entre filas */
+}
+
+.tasks-table th {
+  background-color: #60A5FA; /* Fondo azul para la cabecera de la tabla */
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase; /* Opcional */
+}
+
+.tasks-table tbody tr:hover {
+  background-color: #f9fafb; /* Hover sutil en las filas */
+}
+
+.tasks-loading-message,
+.tasks-error-message {
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.tasks-loading-message {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.tasks-error-message {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Estilos para TaskItemPlaceholder (o tu TaskItem.css real) */
+.task-item-row td {
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.task-item-status-buttons button {
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 12px; /* Botones redondeados como píldoras */
+  cursor: pointer;
+  font-size: 0.8rem;
+  background-color: #f0f0f0; /* Default */
+  min-width: 90px; /* Para que tengan un ancho similar */
+  text-align: center;
+}
+.task-item-status-buttons button:hover {
+  opacity: 0.8;
+}
+/* Colores específicos para los botones de estado (ejemplos) */
+/* Necesitarás lógica en TaskItemPlaceholder para aplicar clases o estilos dinámicos */
+
+
+.task-item-actions {
+  text-align: right; /* Alinea los botones de acción a la derecha */
+}
+
+.task-action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem; /* Tamaño de los íconos emoji */
+  padding: 5px;
+  margin-left: 8px;
+}
+.task-action-button:hover {
+  opacity: 0.7;
+}

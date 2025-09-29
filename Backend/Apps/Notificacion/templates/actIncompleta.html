@@ -1,0 +1,11 @@
+<h2>Hola {{ nombre }},</h2>
+<p>Estas actividades no fueron realizadas en la fecha indicada:</p>
+<ul>
+  {% for actividad in actividades %}
+  <li>
+    {{ actividad.titulo}} - {{ actividad.horaFin }} -
+    {{actividad.fechaRealizacion}}
+  </li>
+  {% endfor %}
+</ul>
+<strong>Necesitan ser reprogramadas</strong>

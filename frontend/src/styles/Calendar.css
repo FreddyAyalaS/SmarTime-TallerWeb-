@@ -1,0 +1,145 @@
+/* src/Calendar.css */
+
+.calendar {
+  padding: 1rem;
+  font-family: sans-serif;
+  background-color: #f1f1f1;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000000;
+}
+
+.create-container {
+  position: relative;
+  display: inline-block;
+}
+
+.create-btn {
+  padding: 0.5rem 1rem;
+  background: #FFFFFF;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.activity-options {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 5px;
+  z-index: 10;
+}
+
+.option {
+  padding: 0.5rem 1rem;
+  border: none;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Colores de opciones */
+.option.blue { background-color: #4A90E2; color: white; }
+.option.green { background-color: #2ECC71; color: white; }
+.option.orange { background-color: #F39C12; color: white; }
+.option.gray { background-color: #95A5A6; color: white; }
+
+/* ----- CALENDARIO ----- */
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  row-gap: 1px;
+  column-gap: 1px;
+  margin-top: 0;
+  background-color: transparent;
+  margin-top: 0;
+  gap: 0; 
+  row-gap: 0;  
+}
+
+/* Cabecera: Lunes, Martes... */
+.calendar-day-name {
+  height: 40px;
+  padding: 4px;
+  text-align: center;
+  background-color: #b8b4b42c;
+  font-weight: bold;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Celda de cada día */
+.calendar-day {
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ddd;
+  position: relative;
+  cursor: pointer;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  margin-top: 0;
+}
+
+/* Número del día en cada celda */
+.day-number {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Contenedor de tareas dentro del día */
+.calendar-cells {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-grow: 1;
+}
+
+/* Cada tarea */
+.calendar-task {
+  background-color: #c7d2fe;
+  border: 1px solid #4f46e5;
+  border-radius: 8px;
+  padding: 5px;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+  cursor: grab;
+}
+
+/* Contenido dentro de cada tarea */
+.task-title {
+  font-weight: bold;
+}
+
+.task-time,
+.task-complexity {
+  font-size: 0.75rem;
+}
+
+.calendar-day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}

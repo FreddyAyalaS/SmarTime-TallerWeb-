@@ -1,0 +1,113 @@
+.app-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  padding: 0;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.app-header-logo-link {
+  text-decoration: none;
+  display: none;
+}
+
+.app-header-logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4A2E5E;
+}
+
+.app-header-page-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0;
+}
+
+
+
+.app-header-icon-button {
+  background-color: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.app-header-icon-button:hover {
+  background-color: #F3F4F6;
+}
+
+.app-header-icon-button img {
+  width: 60px;
+  height: 60px;
+}
+
+.app-header-icon-button[aria-label="Notificaciones"] {
+  background-color: #F3F4F6;
+  border-radius: 50%;
+}
+
+.app-header-icon-button[aria-label="Notificaciones"]:hover {
+  background-color: #E5E7EB;
+}
+
+.app-header-user-menu {
+}
+
+.app-header-icon-button[aria-label="Menú de usuario"] img {
+  background-color: #000000;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.app-header-icon-button[aria-label="Menú de usuario"]:hover {
+  background-color: #F3F4F6;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Ajusta el gap si es necesario */
+  position: relative; /* Para que el panel de notificaciones se posicione relativo a esto */
+}
+
+.notification-bell-container {
+  position: relative; /* Para posicionar el punto rojo */
+}
+
+.app-header-icon-button img {
+  width: 50px;
+  height: 50px;
+}
+
+/* Estilo para el punto rojo de notificaciones no leídas */
+.notification-unread-dot {
+  position: absolute;
+  top: 4px;  /* Ajusta para posicionar el punto sobre la campana */
+  right: 4px; /* Ajusta para posicionar el punto sobre la campana */
+  width: 18px; /* Ancho del punto */
+  height: 18px; /* Alto del punto */
+  background-color: #ef4444; /* Rojo */
+  color: white;
+  border-radius: 50%;
+  font-size: 0.7rem; /* Tamaño del número dentro del punto */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white; /* Borde blanco alrededor del punto */
+  line-height: 1; /* Para centrar mejor el número si es de un dígito */
+}
