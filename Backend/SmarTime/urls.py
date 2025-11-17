@@ -28,5 +28,4 @@ urlpatterns = [
     path("estadisticas/", include("Apps.Estadisticas.urls")),
     path("notificacion/", include("Apps.Notificacion.urls")),
     path('usuarios/', include('Apps.Usuarios.urls')),
-    path('gamificacion/', include('Apps.Gamificacion.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
