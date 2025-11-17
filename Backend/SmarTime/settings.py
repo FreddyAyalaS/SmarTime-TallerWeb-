@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "Apps.Tareas",
     "Apps.Notificacion",
     "Apps.Usuarios",
+    "Apps.Aprendizaje_adaptativo",
 ]
 
 AUTH_USER_MODEL = "Autenticacion.UsuarioPersonalizado"
