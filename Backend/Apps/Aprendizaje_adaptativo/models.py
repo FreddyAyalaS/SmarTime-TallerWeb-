@@ -37,3 +37,17 @@ class PerfilAprendizaje(models.Model):
         return f"{self.usuario.username}: {self.metodo_principal}"
 
 
+# Modelo de Curso
+class Curso(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
+
+# Modelo de Tema
+class Tema(models.Model):
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='temas')
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.curso.nombre})"
