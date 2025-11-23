@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPreguntasTest, enviarRespuestasTest } from '../services/aprendizajeService';
+import { getPreguntasTest, enviarRespuestasTest, getPerfilAprendizaje } from '../services/aprendizajeService';
 import Button from '../components/Button';
 import '../styles/TestPerfilPage.css';
 
@@ -10,10 +10,33 @@ const TestPerfilPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [perfilResultado, setPerfilResultado] = useState(null);
   const [error, setError] = useState(null);
+  const [cargandoPerfil, setCargandoPerfil] = useState(true);
 
   useEffect(() => {
-    cargarPreguntas();
+    cargarDatosIniciales();
   }, []);
+
+  const cargarDatosIniciales = async () => {
+    try {
+      setCargandoPerfil(true);
+      setLoading(true);
+      // Primero intentar cargar el perfil existente
+      const perfilExistente = await getPerfilAprendizaje();
+      if (perfilExistente) {
+        setPerfilResultado(perfilExistente);
+        setCargandoPerfil(false);
+        setLoading(false);
+        return; // Si hay perfil, no cargar preguntas
+      }
+    } catch (err) {
+      console.log('No hay perfil existente o error al cargar:', err);
+    } finally {
+      setCargandoPerfil(false);
+    }
+    
+    // Si no hay perfil, cargar preguntas para hacer el test
+    await cargarPreguntas();
+  };
 
   const cargarPreguntas = async () => {
     try {
@@ -59,29 +82,48 @@ const TestPerfilPage = () => {
       setError(null);
       
       // Convertir respuestas al formato esperado por el backend
-      const respuestasArray = Object.entries(respuestas).map(([pregunta, valor]) => ({
-        pregunta: parseInt(pregunta),
-        valor: parseInt(valor)
-      }));
+      const respuestasArray = Object.entries(respuestas)
+        .filter(([pregunta, valor]) => valor !== null && valor !== undefined)
+        .map(([pregunta, valor]) => ({
+          pregunta: parseInt(pregunta),
+          valor: parseInt(valor)
+        }));
 
+      // Validar que todas las preguntas tengan respuesta
+      if (respuestasArray.length !== preguntas.length) {
+        setError('Por favor, responde todas las preguntas antes de enviar.');
+        setSubmitting(false);
+        return;
+      }
+
+      console.log('Enviando respuestas:', respuestasArray);
       const resultado = await enviarRespuestasTest(respuestasArray);
+      console.log('Resultado recibido:', resultado);
       setPerfilResultado(resultado);
     } catch (err) {
       console.error('Error al enviar respuestas:', err);
-      setError('Error al procesar tus respuestas. Por favor, intenta nuevamente.');
+      const errorMessage = err.response?.data?.error || err.message || 'Error al procesar tus respuestas. Por favor, intenta nuevamente.';
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleActualizarTest = () => {
+  const handleActualizarTest = async () => {
     setPerfilResultado(null);
-    // Reiniciar respuestas
-    const respuestasIniciales = {};
-    preguntas.forEach(pregunta => {
-      respuestasIniciales[pregunta.id] = null;
-    });
-    setRespuestas(respuestasIniciales);
+    setCargandoPerfil(false);
+    
+    // Si no hay preguntas cargadas, cargarlas primero
+    if (preguntas.length === 0) {
+      await cargarPreguntas();
+    } else {
+      // Reiniciar respuestas
+      const respuestasIniciales = {};
+      preguntas.forEach(pregunta => {
+        respuestasIniciales[pregunta.id] = null;
+      });
+      setRespuestas(respuestasIniciales);
+    }
   };
 
   const getMetodoDescripcion = (metodo) => {
@@ -93,11 +135,11 @@ const TestPerfilPage = () => {
     return descripciones[metodo] || `Método ${metodo}`;
   };
 
-  if (loading) {
+  if (loading || cargandoPerfil) {
     return (
       <div className="test-perfil-container">
         <div className="test-perfil-loading">
-          <p>Cargando preguntas del test...</p>
+          <p>{cargandoPerfil ? 'Cargando tu perfil...' : 'Cargando preguntas del test...'}</p>
         </div>
       </div>
     );
@@ -153,6 +195,20 @@ const TestPerfilPage = () => {
     );
   }
 
+  // Si no hay preguntas y no está cargando, mostrar mensaje
+  if (preguntas.length === 0 && !loading) {
+    return (
+      <div className="test-perfil-container">
+        <div className="test-perfil-content">
+          <h1>Test de Perfil de Aprendizaje</h1>
+          <p className="test-intro">
+            Cargando preguntas del test...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="test-perfil-container">
       <div className="test-perfil-content">
@@ -169,7 +225,7 @@ const TestPerfilPage = () => {
         )}
 
         <form onSubmit={handleSubmit} className="test-form">
-          {preguntas.map((pregunta, index) => (
+          {preguntas.length > 0 && preguntas.map((pregunta, index) => (
             <div key={pregunta.id} className="pregunta-item">
               <div className="pregunta-header">
                 <span className="pregunta-numero">{index + 1}</span>

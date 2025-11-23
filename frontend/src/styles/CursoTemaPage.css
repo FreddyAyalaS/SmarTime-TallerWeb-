@@ -2,7 +2,7 @@
 .curso-tema-container {
   min-height: 100vh;
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 .curso-tema-content {
@@ -69,7 +69,7 @@
 
 .busqueda-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #4a90e2;
 }
 
 /* Layout Principal */
@@ -104,7 +104,7 @@
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #4a90e2;
 }
 
 .curso-seleccionado-info p {
@@ -115,7 +115,7 @@
 .btn-cambiar-curso {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  background: #667eea;
+  background: #4a90e2;
   color: white;
   border: none;
   border-radius: 6px;
@@ -140,13 +140,13 @@
 }
 
 .curso-item:hover {
-  border-color: #667eea;
+  border-color: #4a90e2;
   transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
 }
 
 .curso-item.selected {
-  border-color: #667eea;
+  border-color: #4a90e2;
   background: #f0f4ff;
 }
 
@@ -180,12 +180,12 @@
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  border: 2px solid #667eea;
+  border: 2px solid #4a90e2;
 }
 
 .formulario-dificultad h3 {
   margin: 0 0 1rem 0;
-  color: #667eea;
+  color: #4a90e2;
   font-size: 1.2rem;
 }
 
@@ -215,7 +215,7 @@
 .select-dificultad:focus,
 .select-metodo:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #4a90e2;
 }
 
 .form-actions {
@@ -275,13 +275,13 @@
 }
 
 .tema-item:hover {
-  border-color: #667eea;
+  border-color: #4a90e2;
   transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
 }
 
 .tema-item.selected {
-  border-color: #667eea;
+  border-color: #4a90e2;
   background: #f0f4ff;
 }
 
@@ -377,7 +377,7 @@
 }
 
 .curso-badge {
-  background: #667eea;
+  background: #4a90e2;
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 12px;
@@ -396,7 +396,7 @@
   margin-top: 0.5rem;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  background: #667eea;
+  background: #4a90e2;
   color: white;
   border: none;
   border-radius: 6px;
@@ -406,7 +406,7 @@
 }
 
 .btn-actualizar-tema:hover {
-  background: #5568d3;
+  background: #357abd;
   transform: translateY(-2px);
 }
 

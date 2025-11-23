@@ -1,13 +1,16 @@
 # Apps/Aprendizaje_adaptativo/urls.py
 from django.urls import path
 from .views import (
-    TestPerfilView, CursoTemaView, TemaDificultadView,
+    TestPerfilView, PerfilAprendizajeView, CursoTemaView, TemaDificultadView,
     GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView
 )
 
 urlpatterns = [
     path('perfil/', TestPerfilView.as_view(), name='test-perfil'), 
     # http://localhost:8000/aprendizaje_adaptativo/perfil/
+    
+    path('perfil-usuario/', PerfilAprendizajeView.as_view(), name='perfil-usuario'),
+    # http://localhost:8000/aprendizaje_adaptativo/perfil-usuario/
     
     path('cursos-temas/', CursoTemaView.as_view(), name='cursos-temas'),
     # http://localhost:8000/aprendizaje_adaptativo/cursos-temas/

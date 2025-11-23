@@ -39,12 +39,13 @@ export const enviarRespuestasTest = async (respuestas) => {
  */
 export const getPerfilAprendizaje = async () => {
   try {
-    // Nota: El backend no tiene un endpoint específico para obtener el perfil,
-    // pero podemos usar el endpoint de perfil para obtenerlo si existe
-    // Por ahora, esto sería una extensión futura del backend
-    const response = await apiClient.get(`${APRENDIZAJE_BASE_PATH}/perfil/`);
+    const response = await apiClient.get(`${APRENDIZAJE_BASE_PATH}/perfil-usuario/`);
     return response.data;
   } catch (error) {
+    // Si no existe perfil (404), retornar null en lugar de lanzar error
+    if (error.response && error.response.status === 404) {
+      return null;
+    }
     console.error('Error al obtener perfil de aprendizaje:', error);
     throw error;
   }

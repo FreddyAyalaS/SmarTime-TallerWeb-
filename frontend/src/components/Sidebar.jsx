@@ -12,7 +12,7 @@ import tasksIcon from '../assets/Icons/tasks.svg';
 import antiProcrastinationIcon from '../assets/Icons/anti-procrastination.svg';
 import userProfileIcon from '../assets/Icons/user-profile.svg';
 import libroCerebroIcon from '../assets/Icons/libro-cerebro.svg';
-import AppLogo from '../assets/Icons/Logo.png';
+import AppLogo from '../assets/Icons/smarttime-logo.svg';
 
 import { logoutUser } from '../services/authService';
 
