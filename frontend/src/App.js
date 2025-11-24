@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
+import { useEffect } from "react";
 
 // Pages
 import LoginPage from './pages/LoginPage';
@@ -53,6 +54,25 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+    useEffect(() => {
+    const eventSource = new EventSource("http://127.0.0.1:8000/notificacion/stream/");
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        // Si el mensaje está vacío → ignorar
+        if (data.mensaje) {
+          alert(`Notificación: ${data.mensaje}`);
+        }
+
+      } catch (error) {
+        console.error("Error procesando SSE:", error);
+      }
+    };
+
+    return () => eventSource.close();
+  }, []);
   return (
     <Router>
       <Routes>

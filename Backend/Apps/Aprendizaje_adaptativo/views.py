@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from .models import (
     PreguntaPerfil, RespuestaPerfil, PerfilAprendizaje,
@@ -14,6 +15,7 @@ from .serializers import (
 from django.db.models import Sum
 from datetime import datetime, timedelta, time
 import math
+from django.utils.dateparse import parse_date 
 
 
 # Configuración de parámetros por método de estudio y dificultad
@@ -484,6 +486,119 @@ class GenerarPlanificacionView(APIView):
             hora_actual = hora_fin
         
         return sesiones
+
+class GenerarPlanInteligenteView(APIView):
+    """
+    TR-USR-001, TR-USR-002, TR-USR-003
+    Genera bloques inteligentes de estudio sin crear sesiones todavía.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        temas = request.data.get("temas", [])
+        dificultad = request.data.get("dificultad", "media")
+        fecha_limite_str = request.data.get("fecha_limite")
+
+        # Fecha límite
+        if fecha_limite_str:
+            fecha_limite = datetime.strptime(fecha_limite_str, "%Y-%m-%d").date()
+        else:
+            fecha_limite = datetime.today().date() + timedelta(days=7)
+
+        fecha_actual = datetime.today().date()
+        bloques = []
+
+        # Duración por dificultad
+        if dificultad == "difícil":
+            duracion = 90
+        elif dificultad == "media":
+            duracion = 60
+        else:
+            duracion = 40
+
+        # Días disponibles
+        dias_disponibles = (fecha_limite - fecha_actual).days + 1
+        if dias_disponibles < len(temas):
+            dias_disponibles = len(temas)
+
+        # Crear bloques
+        for i, tema in enumerate(temas):
+            dia = fecha_actual + timedelta(days=i)
+
+            bloques.append({
+                "tarea": f"Estudio de {tema}",
+                "inicio": dia.isoformat(),
+                "fin": dia.isoformat(),
+                "duracion": duracion,
+                "tema": tema,
+                "dificultad": dificultad
+            })
+
+        return Response({"bloques": bloques}, status=status.HTTP_200_OK)
+
+class GuardarPlanInteligenteView(APIView):
+    """
+    TR-USR-004 — Convierte el plan inteligente en actividades reales (Estudio).
+    Requiere autenticación.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        bloques = request.data.get("bloques", [])
+        creados = []
+
+        for b in bloques:
+            try:
+                # fecha (esperamos 'YYYY-MM-DD' en b['inicio'])
+                fecha = parse_date(b.get("inicio")) or datetime.today().date()
+
+                # duración en minutos (int)
+                duracion = int(b.get("duracion", 60))
+
+                # usar hora del bloque si existe (formato 'HH:MM' o 'HH:MM:SS'), sino 09:00
+                hora_str = b.get("hora")
+                if hora_str:
+                    # Si viene con segundos: "09:00:00" -> tomar primero 5 chars "09:00"
+                    # pero datetime.strptime acepta "%H:%M:%S" también
+                    try:
+                        hora_inicio = datetime.strptime(hora_str, "%H:%M").time()
+                    except ValueError:
+                        try:
+                            hora_inicio = datetime.strptime(hora_str, "%H:%M:%S").time()
+                        except ValueError:
+                            hora_inicio = datetime.strptime("09:00", "%H:%M").time()
+                else:
+                    hora_inicio = datetime.strptime("09:00", "%H:%M").time()
+
+                hora_fin_dt = datetime.combine(fecha, hora_inicio) + timedelta(minutes=duracion)
+                hora_fin = hora_fin_dt.time()
+
+                estudio = Estudio.objects.create(
+                    usuario=request.user,
+                    titulo=b.get("tarea", "Estudio"),
+                    curso=b.get("curso", "") or "",
+                    temas=b.get("tema", "") or "",
+                    fecha=fecha,
+                    horaInicio=hora_inicio,
+                    horaFin=hora_fin
+                )
+
+                creados.append({
+                    "id": estudio.id,
+                    "titulo": estudio.titulo,
+                    "fecha": estudio.fecha.isoformat(),
+                    "horaInicio": estudio.horaInicio.isoformat(),
+                    "horaFin": estudio.horaFin.isoformat()
+                })
+            except Exception as e:
+                # registrar en consola para debug pero no detener la creación de otros bloques
+                print("Error al crear bloque de estudio:", e)
+                continue
+
+        return Response({
+            "creado": creados,
+            "mensaje": "Plan agregado al calendario exitosamente."
+        }, status=status.HTTP_201_CREATED)
 
 
 class PlanificacionesView(APIView):

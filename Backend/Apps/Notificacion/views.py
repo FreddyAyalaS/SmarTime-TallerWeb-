@@ -1,5 +1,5 @@
 from collections import defaultdict
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from Apps.Calendario.models import Tarea, Clase, Estudio
 from .utils import (
     enviar_recordatorios_tareas,
@@ -8,7 +8,53 @@ from .utils import (
 )
 from django.utils.timezone import localtime, now, make_aware
 from datetime import date, datetime, timedelta
+import json
+import time
 
+
+# ============================================================
+# VISTA SSE PARA "/notificacion/stream/"
+# ============================================================
+
+def stream_notificaciones(request):
+
+    def event_stream():
+        global ULTIMA_NOTIFICACION
+        while True:
+
+            # Si hay una notificación real pendiente → enviarla
+            if ULTIMA_NOTIFICACION:
+                yield f"data: {json.dumps(ULTIMA_NOTIFICACION)}\n\n"
+                ULTIMA_NOTIFICACION = None
+
+            else:
+                # Ping vacío para que la conexión no se cierre
+                yield "data: {}\n\n"
+
+            time.sleep(10)
+
+    response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+    response['Cache-Control'] = 'no-cache'
+    return response
+
+def enviar_notificacion(request):
+        """
+        Vista que se llama desde el backend cuando quieres notificar al usuario.
+        """
+        global ULTIMA_NOTIFICACION
+
+        mensaje = request.GET.get("mensaje", None)
+
+        if not mensaje:
+            return JsonResponse({"error": "Se requiere el parámetro 'mensaje'."}, status=400)
+
+        ULTIMA_NOTIFICACION = {"mensaje": mensaje}
+
+        return JsonResponse({"status": "ok", "mensaje": mensaje})
+
+# ============================================================
+#  VISTAS ORIGINALES
+# ============================================================
 
 def enviar_recordatorios(request):
     hoy = date.today()

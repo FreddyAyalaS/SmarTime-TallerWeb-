@@ -99,3 +99,31 @@ export const asignarDificultadTema = async (tema_id, dificultad, metodo_estudio)
   }
 };
 
+// ========== HU-21: Generar Planificación Inteligente ==========
+
+/**
+ * Genera una planificación inteligente para el usuario
+ * @param {Object} data - Datos enviados al backend
+ *  - tema_dificultad_id (number)
+ *  - fecha_inicio (string YYYY-MM-DD)
+ *  - hora_preferida (string HH:MM)
+ *  - dias_disponibles (array de strings)
+ */
+export const generarPlanificacion = async (data) => {
+  try {
+    const response = await apiClient.post(
+      `${APRENDIZAJE_BASE_PATH}/generar-planificacion/`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al generar planificación:", error);
+    throw error;
+  }
+};
+
+/**
+ * Alias opcional (solo si quieres seguir la nomenclatura del ejemplo)
+ * para mantener consistencia con CalendarPage.jsx
+ */
+export const getTemasConDificultad = getTemasDificultad;

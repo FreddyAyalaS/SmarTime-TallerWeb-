@@ -29,4 +29,5 @@ urlpatterns = [
     path("notificacion/", include("Apps.Notificacion.urls")),
     path('usuarios/', include('Apps.Usuarios.urls')),
     path('aprendizaje_adaptativo/', include('Apps.Aprendizaje_adaptativo.urls')),
+    path("notificacion/", include("Apps.Notificacion.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

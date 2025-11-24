@@ -30,6 +30,9 @@ import {
   updateEstudio,
   updateActividadNoAcademica,
 } from '../services/calendarService';
+import apiClient from "../services/apiClient";
+import ModalPlanEstudio from "../components/ModalPlanEstudio";
+import { getTemasConDificultad, generarPlanificacion } from '../services/aprendizajeService';
 
 
 const Calendar = () => {
@@ -37,17 +40,35 @@ const Calendar = () => {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [tasks, setTasks] = useState([]);
+  const [planSugerido, setPlanSugerido] = useState(null);
+  const [mostrarModalPlan, setMostrarModalPlan] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const toggleOptions = () => setShowOptions(!showOptions);
   const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showActivityModal, setShowActivityModal] = useState(false);
+  const [temas, setTemas] = useState([]);
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const temas = await getTemasConDificultad();
+      setTemas(temas);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+
   const formatToHHMM = (timeStr) => {
     if (!timeStr) return '';
-    return timeStr.slice(0, 5); // Devuelve "HH:mm"
+    return timeStr.slice(0, 5);
   };
-  const handleDeleteActivity = async (activity) => {
 
+  const handleDeleteActivity = async (activity) => {
     console.log("Intentando eliminar actividad:", activity);
 
     try {
@@ -56,7 +77,6 @@ const Calendar = () => {
         return;
       }
 
-      // ✅ Si es una actividad solo del frontend (ID generado con '_')
       if (activity.id.toString().startsWith('_')) {
         console.log("Eliminando del frontend (actividad local)");
         setTasks(prev => prev.filter(t => t.id !== activity.id));
@@ -64,7 +84,6 @@ const Calendar = () => {
         return;
       }
 
-      // ✅ Si viene del backend, eliminar también desde el backend
       switch (activity.type) {
         case 'Tarea':
           await deleteTarea(activity.id);
@@ -83,7 +102,6 @@ const Calendar = () => {
           return;
       }
 
-      // ✅ Eliminar del frontend también
       setTasks(prev => prev.filter(t => t.id !== activity.id));
       setShowActivityModal(false);
 
@@ -91,21 +109,17 @@ const Calendar = () => {
       console.error("Error al eliminar:", error);
       alert("No se pudo eliminar la actividad.");
     }
-
   };
-
+  
 
   const handleEditActivity = (activity) => {
     setSelectedType(activity.type);
-    setSelectedTask(activity); // Guarda los datos originales para el formulario
+    setSelectedTask(activity);
     setShowActivityModal(false);
     setShowTaskForm(true);
   };
-
-
-
-  useEffect(() => {
-    const fetchActivities = async () => {
+  
+  const fetchActivities = async () => {
       try {
         const tareas = await getTareas();
         const clases = await getClases();
@@ -117,8 +131,6 @@ const Calendar = () => {
         const mappedClases = clases.map(c => mapToFrontendTask('Clase', c));
         const mappedNoAcad = actividadesNoAcad.map(a => mapToFrontendTask('Act. no académica', a));
 
-
-        // Finalmente juntamos todas
         setTasks([
           ...mappedTareas,
           ...mappedClases,
@@ -130,9 +142,9 @@ const Calendar = () => {
       }
     };
 
+  useEffect(() => {
     fetchActivities();
   }, []);
-
 
   const handleOptionClick = (type) => {
     setSelectedType(type);
@@ -201,7 +213,8 @@ const Calendar = () => {
     }
   };
 
-  // En handleSaveTask:
+  
+
   const handleSaveTask = async (taskData) => {
     const isEdit = !!selectedTask?.id;
 
@@ -348,7 +361,7 @@ const Calendar = () => {
           repeatedDate.setDate(repeatedDate.getDate() + 7 * i);
           allTasks.push({
             ...frontendTask,
-            id: generateId(), // ID solo frontend
+            id: generateId(),
             fecha: repeatedDate.toISOString().split('T')[0],
           });
         }
@@ -362,35 +375,26 @@ const Calendar = () => {
     }
   };
 
-
-
-  // Para generar el arreglo de días del mes
   const getMonthDays = (year, month) => {
     const firstDayOfMonth = new Date(year, month, 1);
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
 
-    // Determinar en qué día de la semana empieza (0 = domingo, 6 = sábado)
     let firstDayOfWeek = firstDayOfMonth.getDay();
-
-    // Ajustar para que lunes = 0, martes = 1, ..., domingo = 6
     firstDayOfWeek = (firstDayOfWeek + 6) % 7;
 
     const days = [];
 
-    // Días vacíos al inicio del mes
     for (let i = 0; i < firstDayOfWeek; i++) {
       days.push(null);
     }
 
-    // Días reales del mes
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(i);
     }
 
     return days;
   };
-
 
   const handlePrevMonth = () => {
     const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
@@ -405,7 +409,87 @@ const Calendar = () => {
   const monthDays = getMonthDays(currentDate.getFullYear(), currentDate.getMonth());
   const monthName = currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
 
+  // Dentro de CalendarPage.jsx — reemplaza tu handleGenerarPlanInteligente actual
+const handleGenerarPlanInteligente = async () => {
+  try {
+    // 1) Obtener temas/dificultades del usuario
+    const temas = await getTemasConDificultad();
 
+    if (!Array.isArray(temas) || temas.length === 0) {
+      alert("No tienes temas con dificultad asignada. Ve a 'Perfil' o 'Cursos' y asigna dificultad a un tema primero.");
+      return;
+    }
+
+    const temaDificultad = temas[0];
+    const tema_dificultad_id = temaDificultad.id;
+
+    const hoy = new Date();
+    const fecha_inicio = hoy.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+
+    const payload = {
+      tema_dificultad_id,
+      fecha_inicio,
+      hora_preferida: '09:00',
+      dias_disponibles: ['lunes','martes','miercoles','jueves','viernes'],
+    };
+
+    // 4) Llamar al endpoint real
+    const resultado = await generarPlanificacion(payload);
+
+    // Normalizar array de sesiones/bloques (varios nombres posibles)
+    let sesionesRaw = [];
+    if (Array.isArray(resultado.sesiones)) sesionesRaw = resultado.sesiones;
+    else if (Array.isArray(resultado.bloques)) sesionesRaw = resultado.bloques;
+    else if (Array.isArray(resultado.sesiones_creadas)) sesionesRaw = resultado.sesiones_creadas;
+    else if (Array.isArray(resultado.data)) sesionesRaw = resultado.data;
+    // si no hay detalle, dejamos sesionesRaw = []
+
+    // Deduplicar por clave compuesta (fecha + horaInicio + tipo + numero)
+    const seen = new Set();
+    const sesionesUnicas = sesionesRaw.filter(s => {
+      const fecha = s.fecha || s.fecha_inicio || s.date || '';
+      const hora = (s.hora_inicio || s.hora || s.inicio || '').toString().slice(0,8);
+      const tipo = s.tipo_sesion || s.tipo || s.nombre || s.tarea || '';
+      const numero = s.numero_sesion ?? s.numero ?? '';
+      const key = `${fecha}|${hora}|${tipo}|${numero}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    // Guardar un objeto que incluya la info original + sesiones deduplicadas
+    const planToShow = {
+      ...resultado,
+      sesiones: sesionesUnicas
+    };
+
+    setPlanSugerido(planToShow);
+    setMostrarModalPlan(true);
+
+  } catch (error) {
+    console.error("Error generando plan inteligente:", error);
+    const msg = error?.response?.data?.error || error?.message || "Hubo un problema al generar el plan inteligente.";
+    alert(msg);
+  }
+};
+
+
+   const handleAceptarPlan = async () => {
+    try {
+      // IMPORTANTE: La generación ya guardó las sesiones en el backend (GenerarPlanificacionView crea SesionEstudio).
+      // Por eso NO llamamos a un endpoint /guardar_plan/ (inexistente).
+      // Simplemente cerramos el modal y recargamos actividades desde el backend.
+      setMostrarModalPlan(false);
+
+      // Recargar eventos del calendario (usa tu función ya existente)
+      await fetchActivities();
+
+      alert("Plan agregado exitosamente al calendario.");
+    } catch (error) {
+      console.error(error);
+      alert("Error al procesar la aceptación del plan.");
+    }
+  };
 
 
   return (
@@ -428,6 +512,14 @@ const Calendar = () => {
             </div>
           )}
         </div>
+
+        <button 
+          className="create-btn"
+          style={{ backgroundColor: "#6f42c1", marginLeft: "10px" }}
+          onClick={handleGenerarPlanInteligente}
+        >
+          Plan Inteligente 📅
+        </button>
       </div>
 
       <div className="calendar-day-names">
@@ -439,10 +531,6 @@ const Calendar = () => {
       </div>
       
       <div className="calendar-grid">
-        {/* Cabecera de días */}
-        
-
-        {/* Días del mes */}
         {monthDays.map((dayNumber, index) => (
           <CalendarDay
             key={index}
@@ -453,13 +541,10 @@ const Calendar = () => {
             setTasks={setTasks}
             onDayClick={(task) => {
               if (Array.isArray(task)) return;
-              setSelectedTask(task); // No vuelvas a mapear
+              setSelectedTask(task);
               setShowActivityModal(true);
             }}
-
-
           />
-
         ))}
       </div>
 
@@ -470,9 +555,7 @@ const Calendar = () => {
           type={selectedType}
           initialData={selectedTask}
         />
-
       )}
-
 
       {showActivityModal && (
         <ActivityModal
@@ -484,12 +567,17 @@ const Calendar = () => {
           onEdit={handleEditActivity}
           onDelete={handleDeleteActivity}
         />
-
       )}
 
+      {/* AQUÍ VA EL MODAL DE PLAN INTELIGENTE */}
+      {mostrarModalPlan && (
+        <ModalPlanEstudio
+          plan={planSugerido}
+          onAceptar={handleAceptarPlan}
+          onRechazar={() => setMostrarModalPlan(false)}
+        />
+      )}
     </div>
-
-
   );
 };
 
