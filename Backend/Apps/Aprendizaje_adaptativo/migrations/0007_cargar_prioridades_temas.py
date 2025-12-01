@@ -58,5 +58,3 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(cargar_prioridades, revertir_prioridades),
     ]
-
-    operations = []
