@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import TaskForm from '../components/TaskForm';
 import CalendarDay from '../components/CalendarDay';
 import ActivityModal from '../components/ActivityModal';
+import PomodoroTimer from '../components/PomodoroTimer';
 import '../styles/Calendar.css';
 import {
   createTarea,
@@ -16,6 +17,7 @@ import {
   getEstudios,
   getActividadesNoAcademicas,
 } from '../services/calendarService';
+import { getSesionesEstudio } from '../services/aprendizajeService';
 import { useEffect } from 'react';
 import {
   deleteTarea,
@@ -42,6 +44,8 @@ const Calendar = () => {
   const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showActivityModal, setShowActivityModal] = useState(false);
+  const [showPomodoroTimer, setShowPomodoroTimer] = useState(false);
+  const [selectedSesion, setSelectedSesion] = useState(null);
   const formatToHHMM = (timeStr) => {
     if (!timeStr) return '';
     return timeStr.slice(0, 5); // Devuelve "HH:mm"
@@ -117,14 +121,65 @@ const Calendar = () => {
         const mappedClases = clases.map(c => mapToFrontendTask('Clase', c));
         const mappedNoAcad = actividadesNoAcad.map(a => mapToFrontendTask('Act. no académica', a));
 
+        // Cargar sesiones de estudio de planificaciones adaptativas
+        try {
+          const sesionesEstudio = await getSesionesEstudio();
+          
+          // Agrupar sesiones por fecha y tema
+          const sesionesPorFechaTema = {};
+          sesionesEstudio.forEach(s => {
+            const key = `${s.fecha}_${s.tema_id}`;
+            if (!sesionesPorFechaTema[key]) {
+              sesionesPorFechaTema[key] = [];
+            }
+            sesionesPorFechaTema[key].push(s);
+          });
 
-        // Finalmente juntamos todas
-        setTasks([
-          ...mappedTareas,
-          ...mappedClases,
-          ...mappedEstudios,
-          ...mappedNoAcad,
-        ]);
+          // Crear una sola tarjeta consolidada por cada grupo
+          const mappedSesiones = Object.keys(sesionesPorFechaTema).map(key => {
+            const sesiones = sesionesPorFechaTema[key];
+            const primeraSesion = sesiones[0];
+            const totalDuracion = sesiones.reduce((acc, s) => acc + (s.duracion_minutos || 0), 0);
+            
+            return {
+              id: `sesion_${key}`,
+              type: 'Sesión Estudio',
+              title: `${primeraSesion.tema_nombre}`,
+              startTime: primeraSesion.hora_inicio?.slice(0, 5) || '09:00',
+              fecha: primeraSesion.fecha,
+              date: primeraSesion.fecha,
+              realizationDate: primeraSesion.fecha,
+              description: `Curso: ${primeraSesion.curso_nombre} | Dificultad: ${primeraSesion.dificultad} | ${sesiones.length} sesiones (${totalDuracion} min total)`,
+              color: '#667eea',
+              completada: sesiones.every(s => s.completada),
+              tema_nombre: primeraSesion.tema_nombre,
+              curso_nombre: primeraSesion.curso_nombre,
+              dificultad: primeraSesion.dificultad,
+              duracion_minutos: totalDuracion,
+              metodo_estudio: primeraSesion.metodo_estudio || 'Pomodoro',
+              sesiones: sesiones, // Guardar todas las sesiones para el temporizador
+              tema_id: primeraSesion.tema_id
+            };
+          });
+          
+          // Finalmente juntamos todas incluyendo sesiones
+          setTasks([
+            ...mappedTareas,
+            ...mappedClases,
+            ...mappedEstudios,
+            ...mappedNoAcad,
+            ...mappedSesiones,
+          ]);
+        } catch (error) {
+          console.error("Error al cargar sesiones de estudio:", error);
+          // Si falla, usar las otras actividades
+          setTasks([
+            ...mappedTareas,
+            ...mappedClases,
+            ...mappedEstudios,
+            ...mappedNoAcad,
+          ]);
+        }
       } catch (error) {
         console.error("Error al cargar actividades:", error.message);
       }
@@ -453,8 +508,15 @@ const Calendar = () => {
             setTasks={setTasks}
             onDayClick={(task) => {
               if (Array.isArray(task)) return;
-              setSelectedTask(task); // No vuelvas a mapear
-              setShowActivityModal(true);
+              
+              // Si es sesión de estudio, abrir temporizador
+              if (task.type === 'Sesión Estudio' && task.sesiones) {
+                setSelectedSesion(task);
+                setShowPomodoroTimer(true);
+              } else {
+                setSelectedTask(task);
+                setShowActivityModal(true);
+              }
             }}
 
 
@@ -484,7 +546,20 @@ const Calendar = () => {
           onEdit={handleEditActivity}
           onDelete={handleDeleteActivity}
         />
+      )}
 
+      {showPomodoroTimer && selectedSesion && (
+        <PomodoroTimer
+          sesion={selectedSesion}
+          onClose={() => {
+            setShowPomodoroTimer(false);
+            setSelectedSesion(null);
+          }}
+          onComplete={() => {
+            // Marcar sesión como completada
+            console.log('Sesión completada:', selectedSesion);
+          }}
+        />
       )}
 
     </div>

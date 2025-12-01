@@ -1,0 +1,507 @@
+.planificacion-container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.planificacion-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.planificacion-content h1 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.page-intro {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.planificacion-error,
+.planificacion-success {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.planificacion-error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.planificacion-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.planificacion-loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+/* Sección de Temas */
+.temas-section {
+  margin-bottom: 2rem;
+}
+
+.temas-section h2 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.temas-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.tema-item {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.tema-item:hover {
+  transform: translateY(-2px);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.tema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tema-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.curso-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tema-details {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge-dificultad {
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-dificultad.baja {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-dificultad.media {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.badge-dificultad.alta {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.badge-metodo {
+  background: #667eea;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.no-temas {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+}
+
+/* Formulario */
+.formulario-planificacion {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.formulario-planificacion h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.dias-checkbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.checkbox-label:hover {
+  background: #e0e0e0;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.form-info {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.form-info p {
+  margin: 0.25rem 0;
+  color: #1976d2;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-generar {
+  flex: 1;
+  padding: 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-generar:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.btn-generar:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-cancelar {
+  padding: 1rem 2rem;
+  background: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-cancelar:hover {
+  background: #d0d0d0;
+}
+
+/* Planificaciones */
+.planificaciones-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.planificaciones-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.planificaciones-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1rem;
+}
+
+.planificacion-item {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.planificacion-item:hover {
+  transform: translateY(-2px);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.planificacion-item.selected {
+  background: #e3f2fd;
+  border-color: #667eea;
+}
+
+.planificacion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.planificacion-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.badge-activa {
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-activa.activa {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-activa.inactiva {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.planificacion-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.planificacion-details p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Sesiones */
+.sesiones-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.sesiones-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.sesiones-calendario {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sesiones-dia {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.fecha-header {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+.sesiones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sesion-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sesion-item.estudio {
+  border-left-color: #667eea;
+}
+
+.sesion-item.descanso {
+  border-left-color: #4caf50;
+}
+
+.sesion-item.repaso {
+  border-left-color: #ff9800;
+}
+
+.sesion-item.completada {
+  opacity: 0.6;
+  background: #f5f5f5;
+}
+
+.sesion-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sesion-hora {
+  font-weight: 600;
+  color: #333;
+}
+
+.badge-tipo {
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge-tipo.estudio {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.badge-tipo.descanso {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-tipo.repaso {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.sesion-duracion {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.sesion-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sesion-actions input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.btn-eliminar {
+  padding: 0.5rem 1rem;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-eliminar:hover {
+  background: #d32f2f;
+}
+
+@media (max-width: 768px) {
+  .planificacion-container {
+    padding: 1rem;
+  }
+
+  .planificacion-content {
+    padding: 1rem;
+  }
+
+  .temas-list,
+  .planificaciones-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sesion-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sesion-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+

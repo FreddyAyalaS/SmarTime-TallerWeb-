@@ -36,8 +36,12 @@ const LoginPage = () => {
         setError(responseData.mensaje || 'Respuesta inesperada del servidor.');
       }
     } catch (err) {
-      console.error('Error en handleLogin:', err.message);
-      setError(err.message || 'Error al iniciar sesión. Verifica tu usuario y contraseña.');
+      console.error('Error en handleLogin:', err);
+      if (err.isNetworkError || err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        setError('Error de conexión. Asegúrate de que el backend Django esté corriendo en http://127.0.0.1:8000');
+      } else {
+        setError(err.message || 'Error al iniciar sesión. Verifica tu usuario y contraseña.');
+      }
     } finally {
       setIsLoading(false);
     }

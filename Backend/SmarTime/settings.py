@@ -36,7 +36,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "smartime.ux@gmail.com"
 EMAIL_HOST_PASSWORD = "irushwniqnjmibws"  # usa una contraseña de app segura
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
 
 # Application definition
@@ -176,10 +176,26 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # CORS
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True  # Permitir todos los orígenes en desarrollo
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React dev server
+    "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
+]
+
+# CORS Headers adicionales
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 

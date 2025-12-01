@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import (
     PreguntaPerfil, RespuestaPerfil, PerfilAprendizaje,
-    Tema, Curso, TemaDificultad, SesionEstudio, PlanificacionAdaptativa
+    Tema, Curso, TemaDificultad, SesionEstudio, PlanificacionAdaptativa,
+    RecomendacionMetodoEstudio
 )
 
 class PreguntaPerfilSerializer(serializers.ModelSerializer):
@@ -40,7 +41,7 @@ class TemaDificultadSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TemaDificultad
-        fields = ['id', 'tema', 'tema_nombre', 'curso_nombre', 'dificultad', 'metodo_estudio', 'fecha_asignacion']
+        fields = ['id', 'tema', 'tema_nombre', 'curso_nombre', 'dificultad', 'fecha_asignacion']
         read_only_fields = ['usuario']
 
 
@@ -63,14 +64,27 @@ class PlanificacionAdaptativaSerializer(serializers.ModelSerializer):
     tema_nombre = serializers.CharField(source='tema_dificultad.tema.nombre', read_only=True)
     curso_nombre = serializers.CharField(source='tema_dificultad.tema.curso.nombre', read_only=True)
     dificultad = serializers.CharField(source='tema_dificultad.dificultad', read_only=True)
-    metodo_estudio = serializers.CharField(source='tema_dificultad.metodo_estudio', read_only=True)
     sesiones = SesionEstudioSerializer(many=True, read_only=True, source='tema_dificultad.sesiones')
     
     class Meta:
         model = PlanificacionAdaptativa
         fields = [
             'id', 'tema_dificultad', 'tema_nombre', 'curso_nombre', 'dificultad',
-            'metodo_estudio', 'fecha_inicio', 'fecha_fin', 'total_sesiones',
+            'fecha_inicio', 'fecha_fin', 'total_sesiones',
             'sesiones_completadas', 'activa', 'fecha_creacion', 'sesiones'
         ]
         read_only_fields = ['usuario', 'total_sesiones', 'sesiones_completadas']
+
+
+class RecomendacionMetodoEstudioSerializer(serializers.ModelSerializer):
+    tema_nombre = serializers.CharField(source='tema.nombre', read_only=True)
+    curso_nombre = serializers.CharField(source='tema.curso.nombre', read_only=True)
+    
+    class Meta:
+        model = RecomendacionMetodoEstudio
+        fields = [
+            'id', 'tema', 'tema_nombre', 'curso_nombre',
+            'metodo_principal', 'metodo_complementario',
+            'descripcion', 'razon', 'fecha_recomendacion'
+        ]
+        read_only_fields = ['usuario', 'fecha_recomendacion']

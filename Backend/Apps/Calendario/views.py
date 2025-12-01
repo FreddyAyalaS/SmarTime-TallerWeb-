@@ -19,6 +19,7 @@ from .serializers import (
 )
 from rest_framework.views import APIView
 from Apps.Notificacion.utils import sugerencia_actividad
+from Apps.Aprendizaje_adaptativo.models import SesionEstudio
 
 
 # ViewSet para Tareas
@@ -229,6 +230,13 @@ class ActividadesDeHoyAPIView(APIView):
         actividades_no_acad = ActividadNoAcademica.objects.filter(
             usuario=usuario, fecha=hoy
         )
+        
+        # Agregar sesiones de estudio del sistema adaptativo
+        sesiones_estudio = SesionEstudio.objects.filter(
+            usuario=usuario, 
+            fecha=hoy,
+            tipo_sesion='estudio'  # Solo sesiones de estudio, no descansos
+        ).select_related('tema_dificultad__tema__curso')
 
         tareas_serializadas = TareaResumenSerializer(tareas, many=True).data
         estudios_serializados = EstudioResumenSerializer(estudios, many=True).data
@@ -236,10 +244,26 @@ class ActividadesDeHoyAPIView(APIView):
         actividades_serializadas = ActividadNoAcademicaResumenSerializer(
             actividades_no_acad, many=True
         ).data
+        
+        # Serializar sesiones de estudio adaptativo
+        sesiones_serializadas = [
+            {
+                'id': sesion.id,
+                'titulo': f"Sesión {sesion.numero_sesion}: {sesion.tema_dificultad.tema.nombre}",
+                'temas': sesion.tema_dificultad.tema.nombre,
+                'curso': sesion.tema_dificultad.tema.curso.nombre,
+                'horaInicio': sesion.hora_inicio.strftime('%H:%M'),
+                'horaFin': sesion.hora_fin.strftime('%H:%M'),
+                'completada': sesion.completada,
+                'duracion_minutos': sesion.duracion_minutos,
+            }
+            for sesion in sesiones_estudio
+        ]
 
         todas = (
             [{"tipo": "Tarea", **item} for item in tareas_serializadas]
             + [{"tipo": "Estudio", **item} for item in estudios_serializados]
+            + [{"tipo": "Estudio", **item} for item in sesiones_serializadas]  # Agregar sesiones adaptativas
             + [{"tipo": "Clase", **item} for item in clases_serializadas]
             + [
                 {"tipo": "ActividadNoAcademica", **item}

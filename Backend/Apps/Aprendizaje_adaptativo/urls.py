@@ -2,7 +2,8 @@
 from django.urls import path
 from .views import (
     TestPerfilView, PerfilAprendizajeView, CursoTemaView, TemaDificultadView,
-    GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView
+    GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView,
+    RecomendacionMetodoView
 )
 
 urlpatterns = [
@@ -29,4 +30,7 @@ urlpatterns = [
     
     path('sesiones/<int:pk>/', SesionesEstudioView.as_view(), name='sesiones-estudio-detalle'),
     # http://localhost:8000/aprendizaje_adaptativo/sesiones/<id>/
+    
+    path('recomendacion-metodo/', RecomendacionMetodoView.as_view(), name='recomendacion-metodo'),
+    # http://localhost:8000/aprendizaje_adaptativo/recomendacion-metodo/
 ]

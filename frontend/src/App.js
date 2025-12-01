@@ -18,6 +18,8 @@ import StatsPage from './pages/StatsPage';
 import AntiProPage from './pages/AntiProPage';
 import TestPerfilPage from './pages/TestPerfilPage';
 import CursoTemaPage from './pages/CursoTemaPage';
+import RecomendacionMetodoPage from './pages/RecomendacionMetodoPage';
+import PlanificacionPage from './pages/PlanificacionPage';
 
 // Página para rutas no encontradas
 const NotFoundPagePlaceholder = () => (
@@ -74,6 +76,8 @@ function App() {
           <Route path="/analytics" element={<StatsPage />} />
           <Route path="/test-perfil" element={<TestPerfilPage />} />
           <Route path="/curso-tema" element={<CursoTemaPage />} />
+          <Route path="/recomendacion-metodo" element={<RecomendacionMetodoPage />} />
+          <Route path="/planificacion" element={<PlanificacionPage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Route>
 

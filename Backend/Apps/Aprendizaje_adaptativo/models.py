@@ -64,7 +64,6 @@ class TemaDificultad(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE)
     dificultad = models.CharField(max_length=10, choices=DIFICULTAD_CHOICES)
-    metodo_estudio = models.CharField(max_length=20)  # Pomodoro, Feynman, Leitner, etc.
     fecha_asignacion = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -113,3 +112,23 @@ class PlanificacionAdaptativa(models.Model):
     
     def __str__(self):
         return f"Planificación {self.tema_dificultad.tema.nombre} - {self.usuario.username}"
+
+
+# Modelo de Recomendación de Método de Estudio (HU-20)
+class RecomendacionMetodoEstudio(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='recomendaciones')
+    tema = models.ForeignKey(Tema, on_delete=models.CASCADE, related_name='recomendaciones')
+    metodo_principal = models.CharField(max_length=20)
+    metodo_complementario = models.CharField(max_length=20, blank=True, null=True)
+    descripcion = models.TextField(help_text="Descripción breve del método sugerido")
+    razon = models.TextField(help_text="Razón por la cual fue elegido este método")
+    fecha_recomendacion = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-fecha_recomendacion']
+    
+    def __str__(self):
+        metodos = f"{self.metodo_principal}"
+        if self.metodo_complementario:
+            metodos += f" + {self.metodo_complementario}"
+        return f"Recomendación {metodos} - {self.tema.nombre} ({self.usuario.username})"

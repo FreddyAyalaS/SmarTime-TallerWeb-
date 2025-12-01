@@ -23,7 +23,10 @@ const navItemsData = [
   { id: 'modo', text: 'Modo Antiprocrastinación', icon: antiProcrastinationIcon, path: '/anti-procrastination' },
   { id: 'estadistica', text: 'Estadística', icon: statsIcon, path: '/analytics' },
   { id: 'test-perfil', text: 'Test de Perfil', icon: userProfileIcon, path: '/test-perfil' },
-  { id: 'curso-tema', text: 'Cursos y Temas', icon: libroCerebroIcon, path: '/curso-tema' },
+  { id: 'curso-tema', text: 'Estudio', icon: libroCerebroIcon, path: '/curso-tema' },
+  // Recomendación y Planificación: ahora se muestran dentro de la página 'Cursos y Temas'.
+  // Las entradas individuales se eliminaron del sidebar para evitar duplicidad.
+  
   { id: 'configuracion', text: 'Configuración', icon: settingsIcon, path: '/settings' },
 ];
 

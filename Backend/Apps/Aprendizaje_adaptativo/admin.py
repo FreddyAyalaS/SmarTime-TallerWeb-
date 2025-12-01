@@ -41,8 +41,8 @@ class TemaAdmin(admin.ModelAdmin):
 
 @admin.register(TemaDificultad)
 class TemaDificultadAdmin(admin.ModelAdmin):
-    list_display = ['usuario', 'tema', 'dificultad', 'metodo_estudio', 'fecha_asignacion']
-    list_filter = ['dificultad', 'metodo_estudio', 'usuario']
+    list_display = ['id', 'usuario', 'tema', 'dificultad', 'fecha_asignacion']
+    list_filter = ['dificultad']
     search_fields = ['usuario__username', 'tema__nombre']
     date_hierarchy = 'fecha_asignacion'
 

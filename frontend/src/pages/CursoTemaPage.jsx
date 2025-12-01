@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   getCursosYTemas, 
   getTemasDificultad, 
-  asignarDificultadTema 
+  asignarDificultadTema,
+  eliminarDificultadTema,
+  obtenerRecomendacionMetodo,
+  generarPlanificacion,
+  getPerfilAprendizaje
 } from '../services/aprendizajeService';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -16,15 +21,32 @@ const CursoTemaPage = () => {
   const [temaSeleccionado, setTemaSeleccionado] = useState(null);
   const [busqueda, setBusqueda] = useState('');
   const [dificultad, setDificultad] = useState('media');
-  const [metodoEstudio, setMetodoEstudio] = useState('Pomodoro');
   const [loading, setLoading] = useState(true);
+  const [perfilAprendizaje, setPerfilAprendizaje] = useState(null);
+  const [mostrarModalTest, setMostrarModalTest] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [temaConDificultad, setTemaConDificultad] = useState(null);
+  const [recomendacion, setRecomendacion] = useState(null);
+  const [cargandoRecomendacion, setCargandoRecomendacion] = useState(false);
+  const [mostrarPlanificacion, setMostrarPlanificacion] = useState(false);
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [horaPreferida, setHoraPreferida] = useState('09:00');
+  const [diasDisponibles, setDiasDisponibles] = useState({
+    lunes: true, martes: true, miercoles: true, jueves: true, viernes: true,
+    sabado: false, domingo: false
+  });
+  const [generandoPlanificacion, setGenerandoPlanificacion] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     cargarDatos();
+    // Establecer fecha de inicio por defecto (hoy)
+    const hoy = new Date();
+    setFechaInicio(hoy.toISOString().split('T')[0]);
   }, []);
 
   const cargarDatos = async () => {
@@ -32,14 +54,16 @@ const CursoTemaPage = () => {
       setLoading(true);
       setError(null);
       
-      const [cursosTemasData, temasDificultadData] = await Promise.all([
+      const [cursosTemasData, temasDificultadData, perfilData] = await Promise.all([
         getCursosYTemas(),
-        getTemasDificultad()
+        getTemasDificultad(),
+        getPerfilAprendizaje()
       ]);
 
       setCursos(cursosTemasData.cursos || []);
       setTemas(cursosTemasData.temas || []);
       setTemasDificultad(temasDificultadData || []);
+      setPerfilAprendizaje(perfilData);
     } catch (err) {
       console.error('Error al cargar datos:', err);
       setError('Error al cargar los cursos y temas. Por favor, intenta nuevamente.');
@@ -64,6 +88,12 @@ const CursoTemaPage = () => {
   );
 
   const handleSeleccionarCurso = (curso) => {
+    // Verificar si el usuario ha completado el test
+    if (!perfilAprendizaje) {
+      setMostrarModalTest(true);
+      return;
+    }
+    
     setCursoSeleccionado(curso);
     setTemaSeleccionado(null);
     setMostrarFormulario(false);
@@ -71,17 +101,31 @@ const CursoTemaPage = () => {
   };
 
   const handleSeleccionarTema = (tema) => {
+    // Verificar si el usuario ha completado el test
+    if (!perfilAprendizaje) {
+      setMostrarModalTest(true);
+      return;
+    }
+    
+    // Seleccionar el curso del tema automáticamente
+    const cursoDelTema = cursos.find(c => c.id === tema.curso);
+    if (cursoDelTema) {
+      setCursoSeleccionado(cursoDelTema);
+    }
+    
     setTemaSeleccionado(tema);
     setMostrarFormulario(true);
+    setRecomendacion(null);
+    setMostrarPlanificacion(false);
     
     // Verificar si el tema ya tiene dificultad asignada
     const temaConDificultad = temasDificultad.find(td => td.tema === tema.id);
     if (temaConDificultad) {
       setDificultad(temaConDificultad.dificultad);
-      setMetodoEstudio(temaConDificultad.metodo_estudio);
+      setTemaConDificultad(temaConDificultad);
     } else {
       setDificultad('media');
-      setMetodoEstudio('Pomodoro');
+      setTemaConDificultad(null);
     }
   };
 
@@ -100,8 +144,7 @@ const CursoTemaPage = () => {
 
       const resultado = await asignarDificultadTema(
         temaSeleccionado.id,
-        dificultad,
-        metodoEstudio
+        dificultad
       );
 
       setSuccess(resultado.mensaje || 'Dificultad asignada con éxito');
@@ -110,12 +153,13 @@ const CursoTemaPage = () => {
       const temasDificultadData = await getTemasDificultad();
       setTemasDificultad(temasDificultadData || []);
       
-      // Limpiar selección después de un momento
-      setTimeout(() => {
-        setTemaSeleccionado(null);
-        setMostrarFormulario(false);
-        setSuccess(null);
-      }, 2000);
+      // Actualizar tema con dificultad asignada para mostrar recomendación/planificación
+      const nuevoTemaDificultad = temasDificultadData.find(td => td.tema === temaSeleccionado.id);
+      if (nuevoTemaDificultad) {
+        setTemaConDificultad(nuevoTemaDificultad);
+        setDificultad(nuevoTemaDificultad.dificultad);
+        // Mantener el formulario abierto para mostrar recomendación/planificación
+      }
     } catch (err) {
       console.error('Error al asignar dificultad:', err);
       setError('Error al asignar la dificultad. Por favor, intenta nuevamente.');
@@ -127,6 +171,113 @@ const CursoTemaPage = () => {
   const handleCambiarTema = () => {
     setTemaSeleccionado(null);
     setMostrarFormulario(false);
+    setTemaConDificultad(null);
+    setRecomendacion(null);
+    setMostrarPlanificacion(false);
+  };
+
+  const handleObtenerRecomendacion = async () => {
+    if (!temaSeleccionado || !temaConDificultad) {
+      setError('Primero debes asignar dificultad al tema.');
+      return;
+    }
+
+    try {
+      setCargandoRecomendacion(true);
+      setError(null);
+
+      const resultado = await obtenerRecomendacionMetodo(temaSeleccionado.id);
+      setRecomendacion(resultado.recomendacion);
+    } catch (err) {
+      console.error('Error al obtener recomendación:', err);
+      setError(err.response?.data?.error || 'Error al obtener la recomendación. Por favor, intenta nuevamente.');
+    } finally {
+      setCargandoRecomendacion(false);
+    }
+  };
+
+  const handleToggleDia = (dia) => {
+    setDiasDisponibles(prev => ({
+      ...prev,
+      [dia]: !prev[dia]
+    }));
+  };
+
+  const handleGenerarPlanificacion = async (e) => {
+    e.preventDefault();
+    
+    if (!temaConDificultad || !fechaInicio) {
+      setError('Por favor, completa todos los campos requeridos.');
+      return;
+    }
+
+    const diasSeleccionados = Object.keys(diasDisponibles).filter(
+      dia => diasDisponibles[dia]
+    );
+
+    if (diasSeleccionados.length === 0) {
+      setError('Selecciona al menos un día disponible.');
+      return;
+    }
+
+    try {
+      setGenerandoPlanificacion(true);
+      setError(null);
+      setSuccess(null);
+
+      const resultado = await generarPlanificacion(
+        temaConDificultad.id,
+        fechaInicio,
+        horaPreferida,
+        diasSeleccionados
+      );
+
+      setSuccess(`Planificación generada con éxito. Se crearon ${resultado.sesiones_generadas} sesiones. Ve al calendario para verlas.`);
+      setMostrarPlanificacion(false);
+      
+      // Recargar temas con dificultad
+      const temasDificultadData = await getTemasDificultad();
+      setTemasDificultad(temasDificultadData || []);
+      
+      setTimeout(() => {
+        setSuccess(null);
+      }, 5000);
+    } catch (err) {
+      console.error('Error al generar planificación:', err);
+      setError(err.response?.data?.error || 'Error al generar la planificación. Por favor, intenta nuevamente.');
+    } finally {
+      setGenerandoPlanificacion(false);
+    }
+  };
+
+  const handleEliminarDificultad = async (temaDificultadId) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar esta asignación de dificultad?')) {
+      return;
+    }
+
+    try {
+      setError(null);
+      await eliminarDificultadTema(temaDificultadId);
+      setSuccess('Asignación de dificultad eliminada con éxito.');
+      
+      // Recargar temas con dificultad
+      const temasDificultadData = await getTemasDificultad();
+      setTemasDificultad(temasDificultadData || []);
+      
+      // Si el tema eliminado era el seleccionado, limpiar selección
+      if (temaConDificultad?.id === temaDificultadId) {
+        setTemaSeleccionado(null);
+        setMostrarFormulario(false);
+        setTemaConDificultad(null);
+      }
+      
+      setTimeout(() => {
+        setSuccess(null);
+      }, 3000);
+    } catch (err) {
+      console.error('Error al eliminar dificultad:', err);
+      setError('Error al eliminar la asignación de dificultad. Por favor, intenta nuevamente.');
+    }
   };
 
   const getTemaDificultadInfo = (temaId) => {
@@ -232,24 +383,12 @@ const CursoTemaPage = () => {
                         onChange={(e) => setDificultad(e.target.value)}
                         className="select-dificultad"
                       >
-                        <option value="baja">Baja</option>
+                        <option value="baja">Baja (Fácil)</option>
                         <option value="media">Media</option>
-                        <option value="alta">Alta</option>
+                        <option value="alta">Alta (Difícil)</option>
                       </select>
                     </div>
-
-                    <div className="form-group">
-                      <label>Método de Estudio:</label>
-                      <select
-                        value={metodoEstudio}
-                        onChange={(e) => setMetodoEstudio(e.target.value)}
-                        className="select-metodo"
-                      >
-                        <option value="Pomodoro">Pomodoro</option>
-                        <option value="Feynman">Feynman</option>
-                        <option value="Leitner">Leitner</option>
-                      </select>
-                    </div>
+                    <p className="helper-text">El método de estudio será recomendado automáticamente según tu perfil</p>
 
                     <div className="form-actions">
                       <Button
@@ -268,6 +407,9 @@ const CursoTemaPage = () => {
                       </Button>
                     </div>
                   </form>
+
+                  {/* La recomendación y la configuración de planificación se mostrará
+                      en el panel derecho para mayor espacio y separación visual. */}
                 </div>
               )}
 
@@ -301,8 +443,115 @@ const CursoTemaPage = () => {
               </div>
             </div>
           )}
+        </div>
 
-          {/* Sección de Temas Asignados */}
+        {/* Panel de Recomendación y Planificación - Debajo de todo, ancho completo */}
+        {temaSeleccionado && temaConDificultad && (
+          <div className="recomendacion-planificacion-fullwidth">
+            <div className="recomendacion-planificacion-container">
+              <div className="recomendacion-card">
+                <h3>Recomendación Personalizada</h3>
+                {recomendacion ? (
+                  <div className="recomendacion-detalle">
+                    <div className="metodo-recomendado">
+                      <p className="tecnica-label">Técnica recomendada</p>
+                      <h2 className="tecnica-principal">
+                        {recomendacion.metodo_principal.toUpperCase()}
+                        {recomendacion.metodo_complementario && ` + ${recomendacion.metodo_complementario.toUpperCase()}`}
+                      </h2>
+                    </div>
+                    <div className="explicacion-aplicacion">
+                      <div className="explicacion-contenido" dangerouslySetInnerHTML={{ __html: recomendacion.razon }} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="recomendacion-placeholder">
+                    <p>Obtén una recomendación personalizada basada en tu perfil y este tema</p>
+                    <Button
+                      onClick={handleObtenerRecomendacion}
+                      disabled={cargandoRecomendacion}
+                      className="btn-obtener-recomendacion"
+                    >
+                      {cargandoRecomendacion ? 'Generando...' : 'Obtener Recomendación'}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <div className="planificacion-card">
+                <h3>📅 Generar Planificación</h3>
+                {!mostrarPlanificacion ? (
+                  <div className="planificacion-placeholder">
+                    <p>Genera sesiones de estudio automáticamente distribuidas en el tiempo</p>
+                    <Button
+                      onClick={() => setMostrarPlanificacion(true)}
+                      className="btn-mostrar-planificacion"
+                    >
+                      Configurar Planificación
+                    </Button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleGenerarPlanificacion} className="form-planificacion">
+                    <div className="form-group">
+                      <label>Fecha de Inicio:</label>
+                      <input
+                        type="date"
+                        value={fechaInicio}
+                        onChange={(e) => setFechaInicio(e.target.value)}
+                        required
+                        className="form-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Hora Preferida:</label>
+                      <input
+                        type="time"
+                        value={horaPreferida}
+                        onChange={(e) => setHoraPreferida(e.target.value)}
+                        required
+                        className="form-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Días Disponibles:</label>
+                      <div className="dias-checkbox">
+                        {Object.keys(diasDisponibles).map((dia) => (
+                          <label key={dia} className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={diasDisponibles[dia]}
+                              onChange={() => handleToggleDia(dia)}
+                            />
+                            <span>{dia.charAt(0).toUpperCase() + dia.slice(1)}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="form-actions">
+                      <Button
+                        type="submit"
+                        disabled={generandoPlanificacion}
+                        className="btn-generar-planificacion"
+                      >
+                        {generandoPlanificacion ? 'Generando...' : 'Generar Planificación'}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => setMostrarPlanificacion(false)}
+                        className="btn-cancelar"
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sección de Temas Asignados */}
+        <div className="curso-tema-layout">
           {temasDificultad.length > 0 && (
             <div className="temas-asignados-section">
               <h2>Temas con Dificultad Asignada</h2>
@@ -323,16 +572,24 @@ const CursoTemaPage = () => {
                         <span className="badge-metodo">
                           Método: {td.metodo_estudio}
                         </span>
-                        <Button
-                          onClick={() => {
-                            if (tema) {
-                              handleSeleccionarTema(tema);
-                            }
-                          }}
-                          className="btn-actualizar-tema"
-                        >
-                          Actualizar
-                        </Button>
+                        <div className="tema-asignado-actions">
+                          <Button
+                            onClick={() => {
+                              if (tema) {
+                                handleSeleccionarTema(tema);
+                              }
+                            }}
+                            className="btn-actualizar-tema"
+                          >
+                            Actualizar
+                          </Button>
+                          <Button
+                            onClick={() => handleEliminarDificultad(td.id)}
+                            className="btn-eliminar-tema"
+                          >
+                            Eliminar
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   );
@@ -342,6 +599,25 @@ const CursoTemaPage = () => {
           )}
         </div>
       </div>
+
+      {/* Modal: Test no completado */}
+      {mostrarModalTest && (
+        <div className="modal-overlay" onClick={() => setMostrarModalTest(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>⚠️ Test de Aprendizaje Requerido</h2>
+            <p>Antes de elegir cursos y temas, debes completar el test de perfil de aprendizaje.</p>
+            <p>Este test nos ayudará a recomendarte los mejores métodos de estudio personalizados.</p>
+            <div className="modal-actions">
+              <Button onClick={() => navigate('/test-perfil')} className="btn-primary">
+                Ir al Test
+              </Button>
+              <Button onClick={() => setMostrarModalTest(false)} className="btn-secondary">
+                Cerrar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
