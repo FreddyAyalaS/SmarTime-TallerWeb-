@@ -16,6 +16,8 @@ import TasksPage from './pages/TaskPage';
 import Layout from './components/Layout';
 import StatsPage from './pages/StatsPage';
 import AntiProPage from './pages/AntiProPage';
+import TestPerfilPage from './pages/TestPerfilPage';
+import CursoTemaPage from './pages/CursoTemaPage';
 
 // Página para rutas no encontradas
 const NotFoundPagePlaceholder = () => (
@@ -69,7 +71,9 @@ function App() {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/anti-procrastination" element={<AntiProPage />} />
           <Route path="/tasks" element={<TasksPage/>} />
-          <Route path="/analytics" element={<StatsPage />} />  
+          <Route path="/analytics" element={<StatsPage />} />
+          <Route path="/test-perfil" element={<TestPerfilPage />} />
+          <Route path="/curso-tema" element={<CursoTemaPage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Route>
 

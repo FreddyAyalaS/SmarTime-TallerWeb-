@@ -10,7 +10,9 @@ import settingsIcon from '../assets/Icons/settings.svg';
 import statsIcon from '../assets/Icons/stats.svg';
 import tasksIcon from '../assets/Icons/tasks.svg';
 import antiProcrastinationIcon from '../assets/Icons/anti-procrastination.svg';
-import AppLogo from '../assets/Icons/Logo.png';
+import userProfileIcon from '../assets/Icons/user-profile.svg';
+import libroCerebroIcon from '../assets/Icons/libro-cerebro.svg';
+import AppLogo from '../assets/Icons/smarttime-logo.svg';
 
 import { logoutUser } from '../services/authService';
 
@@ -20,6 +22,8 @@ const navItemsData = [
   { id: 'tareas', text: 'Tareas', icon: tasksIcon, path: '/tasks' },
   { id: 'modo', text: 'Modo Antiprocrastinación', icon: antiProcrastinationIcon, path: '/anti-procrastination' },
   { id: 'estadistica', text: 'Estadística', icon: statsIcon, path: '/analytics' },
+  { id: 'test-perfil', text: 'Test de Perfil', icon: userProfileIcon, path: '/test-perfil' },
+  { id: 'curso-tema', text: 'Cursos y Temas', icon: libroCerebroIcon, path: '/curso-tema' },
   { id: 'configuracion', text: 'Configuración', icon: settingsIcon, path: '/settings' },
 ];
 

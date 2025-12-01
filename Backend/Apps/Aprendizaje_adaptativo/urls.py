@@ -4,12 +4,17 @@ from .views import (
     TestPerfilView, CursoTemaView, TemaDificultadView,
     GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView,
     RecomendarMetodoAPIView
+    TestPerfilView, PerfilAprendizajeView, CursoTemaView, TemaDificultadView,
+    GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView
 )
 
 
 urlpatterns = [
     path('perfil/', TestPerfilView.as_view(), name='test-perfil'), 
     # http://localhost:8000/aprendizaje_adaptativo/perfil/
+    
+    path('perfil-usuario/', PerfilAprendizajeView.as_view(), name='perfil-usuario'),
+    # http://localhost:8000/aprendizaje_adaptativo/perfil-usuario/
     
     path('cursos-temas/', CursoTemaView.as_view(), name='cursos-temas'),
     # http://localhost:8000/aprendizaje_adaptativo/cursos-temas/
