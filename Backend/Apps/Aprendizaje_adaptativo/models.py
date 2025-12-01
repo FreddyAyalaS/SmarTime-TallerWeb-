@@ -113,3 +113,32 @@ class PlanificacionAdaptativa(models.Model):
     
     def __str__(self):
         return f"Planificación {self.tema_dificultad.tema.nombre} - {self.usuario.username}"
+    
+    
+# Modelo Prioridad Método por tema
+class PrioridadMetodoTema(models.Model):
+    METODOS = [
+        ('Pomodoro', 'Pomodoro'),
+        ('Feynman', 'Feynman'),
+        ('Leitner', 'Leitner'),
+    ]
+
+    tema = models.OneToOneField(Tema, on_delete=models.CASCADE, related_name="prioridades")
+
+    prioridad_1 = models.CharField(max_length=20, choices=METODOS)  # Recomendación principal
+    prioridad_2 = models.CharField(max_length=20, choices=METODOS)
+    prioridad_3 = models.CharField(max_length=20, choices=METODOS)
+
+    def __str__(self):
+        return f"Prioridades de {self.tema.nombre}"
+    
+# Modelo Recomendación de Estudio
+class RecomendacionEstudio(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tema = models.ForeignKey(Tema, on_delete=models.CASCADE)
+    metodo_recomendado = models.CharField(max_length=20)
+    razon = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.tema.nombre}: {self.metodo_recomendado}"
