@@ -1,9 +1,13 @@
 # Apps/Aprendizaje_adaptativo/urls.py
 from django.urls import path
 from .views import (
+    TestPerfilView, CursoTemaView, TemaDificultadView,
+    GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView,
+    RecomendarMetodoAPIView
     TestPerfilView, PerfilAprendizajeView, CursoTemaView, TemaDificultadView,
     GenerarPlanificacionView, PlanificacionesView, SesionesEstudioView
 )
+
 
 urlpatterns = [
     path('perfil/', TestPerfilView.as_view(), name='test-perfil'), 
@@ -29,4 +33,8 @@ urlpatterns = [
     
     path('sesiones/<int:pk>/', SesionesEstudioView.as_view(), name='sesiones-estudio-detalle'),
     # http://localhost:8000/aprendizaje_adaptativo/sesiones/<id>/
+    
+    path("recomendar-metodo/", RecomendarMetodoAPIView.as_view(), name="recomendar-metodo"),
+    # http://localhost:8000/aprendizaje_adaptativo/recomendar-metodo/
+
 ]

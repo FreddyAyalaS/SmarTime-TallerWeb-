@@ -15,6 +15,12 @@ from django.db.models import Sum
 from datetime import datetime, timedelta, time
 import math
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+from .services import recomendar_metodo
+from .models import Tema
 
 # Configuración de parámetros por método de estudio y dificultad
 METODOS_CONFIG = {
@@ -577,3 +583,18 @@ class SesionesEstudioView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+
+class RecomendarMetodoAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        tema_id = request.data.get("tema_id")
+        tema = Tema.objects.get(id=tema_id)
+
+        metodo, razon = recomendar_metodo(request.user, tema)
+
+        return Response({
+            "tema": tema.nombre,
+            "metodo_recomendado": metodo,
+            "razon": razon
+        })
